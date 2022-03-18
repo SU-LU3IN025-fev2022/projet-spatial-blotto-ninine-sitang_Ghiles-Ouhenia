@@ -98,103 +98,192 @@ def main():
         return ((row,col) not in wallStates) and row>=0 and row<nbLignes and col>=0 and col<nbCols
     
     
-    
+    NB_JOURS=3 #nombre de jours que dure la campagne 
+    score_A=0 
+    score_B=0
+    def strat_alea(goalStates,nbPlayers):
+
+        o1 = goalStates
+        o2 = goalStates
         
+        random.shuffle(o1)
+        objectifs1=[]
+        for i in range(0,nbPlayers,2):
+            objectifs1.append(o1[random.randint(0,len(goalStates)-1)])
+
+        return objectifs1
+    def strat_tetu(o1): 
+        return o1
+
+    def strat_perdant(goalStates,nbPlayers,score_elec,score_A,score_B):
+        nb_joueurs = nbPlayers // 2
+        o1=[]
+        
+        for c in range(len(score_elec)):
+            if score_A > score_B:
+                x,y = score_elec[c]
+            else :
+                y,x = score_elec[c]
+            if nb_joueurs > x:
+                
+                y=x+1
+                nb_joueurs -= y
+                for i in range(y):
+                    o1.append(goalStates[c])
+            else:
+                if x==y :
+                    if x>1:
+                        y=0
+                    else :
+                        y=x
+                        nb_joueurs -= y
+                        for i in range(y):
+                            o1.append(goalStates[c])
+                else :
+                    y=0
+        if nb_joueurs>0:
+            o1.append(goalStates[-1])
+            
+        return o1
     #-------------------------------
     # Attributaion aleatoire des fioles 
     #-------------------------------
-    for m in range(0,nbPlayers,2):
-        objectifs1 = goalStates
-        objectifs2 = goalStates
-        
-        random.shuffle(objectifs1)
-        random.shuffle(objectifs2)
-        a = random.randint(0,len(goalStates)-1)
-        b = random.randint(0,len(goalStates)-1)
-        print("Objectif joueur "+ str(m) + " :" ,objectifs1[a])
-        print("Objectif joueur "+ str(m+1) + " :" ,objectifs2[b])
-
-        
-        #-------------------------------
-        # Carte demo 
-        # 2 joueurs 
-        # Joueur 0: A*
-        # Joueur 1: random walk
-        #-------------------------------
-        
-        #-------------------------------
-        # calcul A* pour le joueur 0
-        #-------------------------------
-        
-
-        
-        g =np.ones((nbLignes,nbCols),dtype=bool)  # par defaut la matrice comprend des True  
-        for w in wallStates:            # putting False for walls
-            g[w]=False
-        p1 = ProblemeGrid2D(initStates[m],objectifs1[a],g,'manhattan')
-        path1 = probleme.astar(p1)
-        print ("Chemin trouvé:", path1)
-        p2 = ProblemeGrid2D(initStates[m+1],objectifs2[b],g,'manhattan')
-        path2 = probleme.astar(p2)
-        print ("Chemin trouvé:", path2)
+    for j in range(NB_JOURS):
+        if j == 0 :
+            objectifs1= strat_alea(goalStates,nbPlayers)
+            objectifs2= strat_alea(goalStates,nbPlayers)
+        if j>0:
+            if score_A > score_B:
+                objectifs1 = strat_tetu(objectifs1) # A garde la meme trategie vue qu'il a gagnié
+                objectifs2 = strat_perdant(goalStates,nbPlayers,score_elec,score_A,score_B)
+            if score_A < score_B:
+                objectifs1 = strat_perdant(goalStates,nbPlayers,score_elec,score_A,score_B) # B garde la meme trategie vue qu'il a gagnié
+                objectifs2 = strat_tetu(objectifs2)
+            if score_A == score_B:
+                objectifs1= strat_alea(goalStates,nbPlayers)
+                objectifs2= strat_alea(goalStates,nbPlayers)
+        #objectifs1= strat_tetu(goalStates,nbPlayers,o1)
+        score_elec=[(0,0)] * len(goalStates)
+        a=0
+        for m in range(0,nbPlayers,2):
+            #-----------------------
+            #On definit les objectifs celon la strategie
+            #-----------------------
             
-        
-        #-------------------------------
-        # Boucle principale de déplacements 
-        #-------------------------------
-        
+            
+            
+
+            
+            #-------------------------------
+            # Carte demo 
+            # 2 joueurs 
+            # Joueur 0: A*
+            # Joueur 1: random walk
+            #-------------------------------
+            
+            #-------------------------------
+            # calcul A* pour le joueur 0
+            #-------------------------------
+            
+
+            
+            g =np.ones((nbLignes,nbCols),dtype=bool)  # par defaut la matrice comprend des True  
+            for w in wallStates:            # putting False for walls
+                g[w]=False
+            p1 = ProblemeGrid2D(initStates[m],objectifs1[a],g,'manhattan')
+            path1 = probleme.astar(p1)
+            #print ("Chemin trouvé:", path1)
+            p2 = ProblemeGrid2D(initStates[m+1],objectifs2[a],g,'manhattan')
+            path2 = probleme.astar(p2)
+            #print ("Chemin trouvé:", path2)
                 
-        posPlayers = initStates
-        row1,col1 = path1[0]
-        row2,col2 = path2[0]
-        for i in range(iterations):
             
-            # on fait bouger chaque joueur séquentiellement
+            #-------------------------------
+            # Boucle principale de déplacements 
+            #-------------------------------
             
-            # Joeur 0: suit son chemin trouve avec A* 
-            if (row1,col1) != objectifs1[a]:
-                row1,col1 = path1[i]
-                posPlayers[m]=(row1,col1)
-                players[m].set_rowcol(row1,col1)
-                print ("pos "+str(m)+":", row1,col1)
-                if (row1,col1) == objectifs1[a]:
-                    print("le joueur "+str(m)+" a atteint son but!")
-            
-            
-            # Joueur 1: fait A*
-            if (row2,col2) != objectifs2[b]:
-                row2,col2 = path2[i]
-                posPlayers[m+1]=(row2,col2)
-                players[m+1].set_rowcol(row2,col2)
-                print ("pos "+str(m+1)+":", row2,col2)
-                if (row2,col2) == objectifs2[b]:
-                    print("le joueur "+str(m+1)+" a atteint son but!")
-            if (row1,col1) == objectifs1[a] and (row2,col2) == objectifs2[b]:
-                break
-
-            """while True: # tant que pas legal on retire une position
-                x_inc,y_inc = random.choice([(0,1),(0,-1),(1,0),(-1,0)])
-                next_row = row+x_inc
-                next_col = col+y_inc
-                if legal_position(next_row,next_col):
+                    
+            posPlayers = initStates
+            row1,col1 = path1[0]
+            row2,col2 = path2[0]
+            for i in range(iterations):
+                
+                # on fait bouger chaque joueur séquentiellement
+                
+                # Joeur 0: suit son chemin trouve avec A*
+                if ((row1,col1) == objectifs1[a]) and (i==0):#si le militant est deja dans son objectif, alors pas de déplacement à faire
+                    
+                    elec = goalStates.index((row1,col1))
+                    x,y = score_elec[elec]
+                    x += 1
+                    score_elec[elec]= (x,y)
+                if (row1,col1) != objectifs1[a]:
+                    row1,col1 = path1[i]
+                    posPlayers[m]=(row1,col1)
+                    players[m].set_rowcol(row1,col1)
+                    #print ("pos "+str(m)+":", row1,col1)
+                    if (row1,col1) == objectifs1[a]:
+                        #print("le joueur "+str(m)+" a atteint son but!")
+                        elec = goalStates.index((row1,col1))
+                        x,y = score_elec[elec]
+                        x += 1
+                        score_elec[elec]= (x,y)
+                        
+                
+                
+                # Joueur 1: fait A*
+                if ((row2,col2) == objectifs2[a]) and (i==0):#si le militant est deja dans son objectif, alors pas de déplacement à faire
+                    
+                    elec = goalStates.index((row2,col2))
+                    x,y = score_elec[elec]
+                    y += 1
+                    score_elec[elec]= (x,y)
+                if (row2,col2) != objectifs2[a]:
+                    row2,col2 = path2[i]
+                    posPlayers[m+1]=(row2,col2)
+                    players[m+1].set_rowcol(row2,col2)
+                    #print ("pos "+str(m+1)+":", row2,col2)
+                    if (row2,col2) == objectifs2[a]:
+                        #print("le joueur "+str(m+1)+" a atteint son but!")
+                        elec = goalStates.index((row2,col2))
+                        x,y = score_elec[elec]
+                        y += 1
+                        score_elec[elec]= (x,y)
+                if (row1,col1) == objectifs1[a] and (row2,col2) == objectifs2[a]:
                     break
-            players[1].set_rowcol(next_row,next_col)
-            print ("pos 1:", next_row,next_col)
-        
-            col=next_col
-            row=next_row
-            posPlayers[1]=(row,col)
-                
-            if (row,col) == objectifs[1]:
-                print("le joueur 1 a atteint son but!")
-                break"""
-                
-                
-            
-            # on passe a l'iteration suivante du jeu
-            game.mainiteration()
 
+                """while True: # tant que pas legal on retire une position
+                    x_inc,y_inc = random.choice([(0,1),(0,-1),(1,0),(-1,0)])
+                    next_row = row+x_inc
+                    next_col = col+y_inc
+                    if legal_position(next_row,next_col):
+                        break
+                players[1].set_rowcol(next_row,next_col)
+                print ("pos 1:", next_row,next_col)
+            
+                col=next_col
+                row=next_row
+                posPlayers[1]=(row,col)
+                    
+                if (row,col) == objectifs[1]:
+                    print("le joueur 1 a atteint son but!")
+                    break"""
+                    
+                    
                 
+                # on passe a l'iteration suivante du jeu
+                game.mainiteration()
+            a+=1
+        print("----------------------------",score_elec)
+        for v in range(len(score_elec)):
+            x,y = score_elec[v]        
+            if x>y:
+                score_A +=1
+            elif y>x:
+                score_B +=1
+
+        print("score de A :", score_A)      
+        print("score de B :", score_B)  
         
             
     
