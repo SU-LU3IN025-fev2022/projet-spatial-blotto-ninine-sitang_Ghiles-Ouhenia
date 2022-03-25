@@ -50,7 +50,7 @@ def init(_boardname=None):
 def main():
 
     #for arg in sys.argv:
-    iterations = 100 # default
+    iterations = 100# default
     if len(sys.argv) == 2:
         iterations = int(sys.argv[1])
     print ("Iterations: ")
@@ -145,10 +145,40 @@ def main():
             o1.append(goalStates[-1])
             
         return o1
+    def nb_pas_max(n):
+        return n
+
+    def fictitious__play(goalStates,nbPlayers,tab_proba,A=True):
+        #Si A = true ça veux dire qu'on applique fictitous sur lui sinon sur B
+        trat_moyenne = [(0,0)] * len(goalStates)
+        for i in range(0,nbPlayers,2):
+            p = random.randint(0,100)/100
+            cpt = 0
+            j=0
+            while j<len(tab_proba) :
+                cpt += tab_proba[j]
+                if cpt  < tab_proba[j] :
+                    break 
+                j+=1
+            if A :
+                trat_moyenne[j][1]+=1
+            else :
+                trat_moyenne[j][0]+=1
+        if A :
+            return strat_perdant(goalStates,nbPlayers,trat_moyenne,0,1)
+        else :
+            return strat_perdant(goalStates,nbPlayers,trat_moyenne,1,0)
+
     #-------------------------------
     # Attributaion aleatoire des fioles 
     #-------------------------------
+    pas_max = 5
+    
+    iterations = nb_pas_max(pas_max)
+    proba_fictitous_A = [0] * len(goalStates)
+    proba_fictitous_B = [0] * len(goalStates)
     for j in range(NB_JOURS):
+        #FAIRE L'INITIALISATION DES TABLEAU DE PROBA
         if j == 0 :
             objectifs1= strat_alea(goalStates,nbPlayers)
             objectifs2= strat_alea(goalStates,nbPlayers)
@@ -165,6 +195,7 @@ def main():
         #objectifs1= strat_tetu(goalStates,nbPlayers,o1)
         score_elec=[(0,0)] * len(goalStates)
         a=0
+        
         for m in range(0,nbPlayers,2):
             #-----------------------
             #On definit les objectifs celon la strategie
@@ -221,6 +252,7 @@ def main():
                     row1,col1 = path1[i]
                     posPlayers[m]=(row1,col1)
                     players[m].set_rowcol(row1,col1)
+
                     #print ("pos "+str(m)+":", row1,col1)
                     if (row1,col1) == objectifs1[a]:
                         #print("le joueur "+str(m)+" a atteint son but!")
@@ -251,23 +283,6 @@ def main():
                         score_elec[elec]= (x,y)
                 if (row1,col1) == objectifs1[a] and (row2,col2) == objectifs2[a]:
                     break
-
-                """while True: # tant que pas legal on retire une position
-                    x_inc,y_inc = random.choice([(0,1),(0,-1),(1,0),(-1,0)])
-                    next_row = row+x_inc
-                    next_col = col+y_inc
-                    if legal_position(next_row,next_col):
-                        break
-                players[1].set_rowcol(next_row,next_col)
-                print ("pos 1:", next_row,next_col)
-            
-                col=next_col
-                row=next_row
-                posPlayers[1]=(row,col)
-                    
-                if (row,col) == objectifs[1]:
-                    print("le joueur 1 a atteint son but!")
-                    break"""
                     
                     
                 
