@@ -112,17 +112,22 @@ def main():
     proba_fictitous_B = [0] * len(goalStates)
     liste_strat_A = []
     liste_strat_B = []
+    strategy = [[1,2,1,3,0],[3,1,1,0,2],[2,0,3,1,1],[0,1,2,1,3],[1,0,0,2,4]]
+    proba_stock = [1/len(strategy)]*len(strategy)
+    objectifs1=0
+    objectifs2=0
     for j in range(NB_JOURS):
         #FAIRE L'INITIALISATION DES TABLEAU DE PROBA
+        
         """if j == 0 :
             objectifs1= strat.alea(goalStates,nbPlayers)
             objectifs2= strat.alea(goalStates,nbPlayers)
         if j>0:
             if score_A > score_B:
                 objectifs1 = strat.tetu(objectifs1) # A garde la meme trategie vue qu'il a gagnié
-                objectifs2 = strat.perdant(goalStates,nbPlayers,score_elec,score_A,score_B)
+                objectifs2 = strat.meilleure_reponse(goalStates,nbPlayers,score_elec,score_A,score_B)
             if score_A < score_B:
-                objectifs1 = strat.perdant(goalStates,nbPlayers,score_elec,score_A,score_B) # B garde la meme trategie vue qu'il a gagnié
+                objectifs1 = strat.meilleure_reponse(goalStates,nbPlayers,score_elec,score_A,score_B) # B garde la meme trategie vue qu'il a gagnié
                 objectifs2 = strat.tetu(objectifs2)
             if score_A == score_B:
                 objectifs1= strat.alea(goalStates,nbPlayers)
@@ -131,8 +136,10 @@ def main():
         
         score_elec=[(0,0)] * len(goalStates)
         a=0
-        objectifs1= strat.fictitous_play(goalStates,nbPlayers,liste_strat_B)
-        objectifs2= strat.alea(goalStates,nbPlayers)
+        objectifs1=strat.stochastique_expert(goalStates,strategy,proba_stock)
+        objectifs2=strat.stochastique_expert(goalStates,strategy,proba_stock)
+        """objectifs1= strat.fictitous_play(goalStates,nbPlayers,liste_strat_B)
+        objectifs2= strat.alea(goalStates,nbPlayers)"""
         
         for m in range(0,nbPlayers,2):
             #-----------------------
@@ -228,23 +235,36 @@ def main():
                 #game.mainiteration()
             a+=1
         print("----------------------------",score_elec)
+        score_A_j=0
+        score_B_j=0
         for v in range(len(score_elec)):
             x,y = score_elec[v]        
             if x>y:
                 score_A +=1
+                score_A_j+=1
             elif y>x:
                 score_B +=1
-
+                score_B_j+=1
+        tmp = [0]*len(goalStates)
+        for t in range(len(objectifs1)):
+            tmp[goalStates.index(objectifs1[t])]+=1
+        if score_A_j > score_B_j:
+            strat_index= strategy.index(tmp)
+            proba_stock[strat_index] *= 1.3
+        if score_A_j < score_B_j:
+            strat_index= strategy.index(tmp)
+            proba_stock[strat_index] *= 0.7
         print("score de A :", score_A)      
         print("score de B :", score_B)
-        strat_A=[0] * len(goalStates)
-        strat_B=[0] * len(goalStates)
+        strat_A=[]
+        strat_B=[]
         for m in range(len(goalStates)):
-            strat_A[m],strat_B[m] =  score_elec[m]
+            x,y = score_elec[m]
+            strat_A.append(x)
+            strat_B.append(y)
         
         liste_strat_A.append(strat_A)
         liste_strat_B.append(strat_B)
-        print(liste_strat_B)  
         
             
     
