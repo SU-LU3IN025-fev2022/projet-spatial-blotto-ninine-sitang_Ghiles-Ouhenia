@@ -5,16 +5,21 @@
 * Ghiles OUHENIA 28716807
 
 ## Description des choix importants d'implémentation
-Stratégie aléatoire : Pour chaque militant on choisi aléatoirement une position d'un électeur et on l'ajoute dans une liste d'objectifs et on l'a renvoie
+### Stratégie aléatoire :
+Pour chaque militant on choisi aléatoirement une position d'un électeur et on l'ajoute dans une liste d'objectifs et on l'a renvoie
 
-Stratégie têtue : cette fonction prend en paramètre un jour et si jour est différent de 0 on renvoie le même objectif que le jour précedent, sinon on appel la fonction alea pour renvoyer un objectif aléatoire.
+### Stratégie têtue : 
+cette fonction prend en paramètre un jour et si jour est différent de 0 on renvoie le même objectif que le jour précedent, sinon on appel la fonction alea pour renvoyer un objectif aléatoire.
 
-Stratégie meilleure réponse: on compare le score du partie A et B, le perdant se sert de la stratégie du gagnant en ajoutant  +1 miliant pour chaque électeur jusqu'à ce qu'il n'y ait plus de militants, avec cette implémentation, on est sur, si il utilise la même stratégie de gagné le jours suivant. 
+### Stratégie meilleure réponse: 
+on compare le score du partie A et B, le perdant se sert de la stratégie du gagnant en ajoutant  +1 miliant pour chaque électeur jusqu'à ce qu'il n'y ait plus de militants, avec cette implémentation, on est sur, si il utilise la même stratégie de gagné le jours suivant. 
 
-Stratégie fictitous_play: on utilise une liste qui contiens les stratégie de l'autre joueur(passé en parametre), puis on compte le nombre d'occurence de chaque statégie, et on parcours chaque stratégie, pour chaqu'une s'entre elle, on appel meilleure_réponse, ensuite en simule une partie avec chaqu'une des statégies qu'il a déja joué et on calcule son gain, si il gagne le gain reçois le nombre d'occurence de la strat sinon il reçois son inverse (-occ).
+### Stratégie fictitous_play: 
+on utilise une liste qui contiens les stratégie de l'autre joueur(passé en parametre), puis on compte le nombre d'occurence de chaque statégie, et on parcours chaque stratégie, pour chaqu'une s'entre elle, on appel meilleure_réponse, ensuite en simule une partie avec chaqu'une des statégies qu'il a déja joué et on calcule son gain, si il gagne le gain reçois le nombre d'occurence de la strat sinon il reçois son inverse (-occ).
 une fois finit on choisis la meilleur_reponse avec le gain max qu'on renvoie. (on aurai pu aussi stocké les gains dans une liste et les mettre sous forme de probabilité puis choisir l'une d'entre elles) 
 
-Stratégie stochastique_expert: cette fonction prend en paramètre un goalstate, une liste de stratégies, et une liste de probabilités associées à chaque stratégies. Au départ on choisit aléatoirement une probabilité p entre 0 et 1 (et on le multiplie * la somme de la liste des probablités (pour évité de mettre à jours les autes proba
+### Stratégie stochastique_expert: 
+cette fonction prend en paramètre un goalstate, une liste de stratégies, et une liste de probabilités associées à chaque stratégies. Au départ on choisit aléatoirement une probabilité p entre 0 et 1 (et on le multiplie * la somme de la liste des probablités (pour évité de mettre à jours les autes proba
 )) puis, on parcours le tableau de probabilités des stratégie jusqu'à trouver l'interval où il appartient et on retourne cette stratégie, et a chaque entré dans la fonction, on met à jour la liste des probabilité.(si la stratégie qu'on a jouez précédement est gagnante, on multiplie ça proba*1.3, sinon on la multiplie * 0.7)
 ## Description des résultats
 ## Fictitous vs Têtu:
