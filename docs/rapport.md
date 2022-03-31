@@ -31,10 +31,12 @@ La stratégie stochastique attribut des probabilités à chacune des stratégies
 
 ## Têtue vs Meilleure réponse : 
 ![tétue_vs_meilleureReponse](https://user-images.githubusercontent.com/100412562/161155900-570d52d2-032a-45f0-8aa7-30cabeab4e3e.png) 
+
 Sur 50 campagnes, la totalité a été remportée par la stratégie meilleure réponse. 
 Le jour 0, les deux deux parties choisissent aléatoirement leur stratégie, donc ils possédes tous les deux 50% de chance de gagner. Ce n'est qu'à partir du deuxième jour, que la stratégie meilleure réponse va battre son adversaire, car elle posséde déja la stratégie de l'autre camps, ce qui est en accord avec l'histogramme ci dessus.
 
 ## Têtue vs Stochastique:
 ![tétue_vs_stochastique](https://user-images.githubusercontent.com/100412562/161155892-b40374e3-5fbe-495b-afdf-7e557f3fb5d9.png)
-Sur 50 campagnes, on observe que Têtue a 45 parties perdues, et 5 nulles. 
-Têtue utilise la même stratégie tout au long de la campagne. Tandis que Stochastique possède 4 stratégies et change ses probabilités de manière à choisir la stratégie qui bat celle de Têtue.
+
+Sur 50 campagnes, on observe que Têtue a 45 parties perdues, et 5 gagné. 
+Têtue utilise la même stratégie tout au long de la campagne. Tandis que Stochastique possède 4 stratégies et change ses probabilités de manière à choisir la stratégie qui bat celle de Têtue, les seuls cas où tétue peut gagné est sois on a pas assez de jours, sois elle bat toute les stratégie de stochastique.
