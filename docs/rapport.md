@@ -17,7 +17,8 @@ Stratégie stochastique_expert: cette fonction prend en paramètre un goalstate,
 ## Description des résultats
     ## Fictitous vs Têtue:
     Sur 50 campagnes, on remarque que fictitous remporte la totalité de la campagne.
-    En effet on a d'une part Têtue qui emploie la même stratégie durant toute la campage. Tandis que Fictitous étant donnée qu'il connait déjà la stratégie qui sera jouée par son adversaire et qu'il suit une stratégie de meilleures réponses, alors il va toujours battre son adversaire.
+    En effet on a d'une part Têtue qui emploie la même stratégie durant toute la campage. Tandis que Fictitous étant donné qu'il connait déjà la stratégie qui sera jouée par son adversaire et qu'il suit une stratégie de meilleures réponses, alors il va toujours battre son adversaire.
+    
     ## Fictitous vs Alea: 
     Sur 50 campagnes, on remarque qu'il y a une majorité de parties nulles.
     En effet, la stratégie fictitous play enregistre les stratégies utilisées par son adversaires et effectue des prédictions en créant un tableau de probabilité avec les meilleurs réponses. Cependant, la stratégie Aléa renvoie toujours de nouvelles données qui ne suivent pas forcéments les prédictions, voir même meilleures que celles prédites par fictitous. Donc les prédictions de fictitous play ne sont pas vraiment utiles.
@@ -32,3 +33,4 @@ Stratégie stochastique_expert: cette fonction prend en paramètre un goalstate,
     
     ## Têtue vs Stochastique:
     Sur 50 campagnes, on observe que Têtue a 45 parties perdues, et 5 nulles. 
+    Têtue utilise la même stratégie tout au long de la campagne. Tandis que Stochastique possède 4 stratégies et change ses probabilités de manière à choisir la stratégie qui bat celle de Têtue.
