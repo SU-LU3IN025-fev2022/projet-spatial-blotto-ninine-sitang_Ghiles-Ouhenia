@@ -17,7 +17,7 @@ def alea(goalStates,nbPlayers):
 def tetu(o1): 
     return o1
 
-def perdant(goalStates,nbPlayers,score_elec,score_A,score_B):
+def meilleure_reponse(goalStates,nbPlayers,score_elec,score_A,score_B):
     nb_joueurs = nbPlayers // 2
     o1=[]
     
@@ -67,9 +67,9 @@ def pos_moyenne_militant(goalStates,nbPlayers,tab_proba,A=True):
             else :
                 trat_moyenne[j][0]+=1
         if A :
-            return perdant(goalStates,nbPlayers,trat_moyenne,0,1)
+            return meilleure_reponse(goalStates,nbPlayers,trat_moyenne,0,1)
         else :
-            return perdant(goalStates,nbPlayers,trat_moyenne,1,0)
+            return meilleure_reponse(goalStates,nbPlayers,trat_moyenne,1,0)
 
 def fictitous_play(goalStates,nbPlayers,liste_strat):
     
@@ -83,7 +83,7 @@ def fictitous_play(goalStates,nbPlayers,liste_strat):
     for i in range(len(strat)):
         for j in range(len(goalStates)):
             score_elec = (strat[i][j],0)
-        meilleurs_strat_i = perdant(goalStates, nbPlayers, score_elec , score_A = 1, score_B = 0)
+        meilleurs_strat_i = meilleure_reponse(goalStates, nbPlayers, score_elec , score_A = 1, score_B = 0)
         for j in range(len(goalStates)):
             elec = goalStates.index(meilleurs_strat_i[j])
             x,y = score_elec[elec]
@@ -111,3 +111,17 @@ def fictitous_play(goalStates,nbPlayers,liste_strat):
             gain_max = gain_i
             meilleurs_strat = meilleurs_strat_i
     return meilleurs_strat
+
+    def stochastique_expert(goalstate,strategy,proba_stock):
+        p=np.random.randint(0,100)/100
+        p=p*sum(proba_stock) # car même si la somme des probabilités n'est pas égal à 1 on revient à la même chose en fesant p*sum(proba_stock)
+        cpt = 0
+        o1=[]
+        for i in range(len(proba_stock)):
+            cpt  += proba_stock[i]
+            if p < cpt:
+                for e in range(len(strategy[i])):
+                    for m in range(strategy[i][e]):
+                        o1.append(goalstate[e])
+                return o1
+        return
