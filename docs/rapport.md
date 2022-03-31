@@ -2,7 +2,7 @@
 
 ## Groupe 4
 * Ninine SITANG 3801541
-* Ghiles Ouhenia 28716807
+* Ghiles OUHENIA 28716807
 
 ## Description des choix importants d'implémentation
 Stratégie aléatoire : Pour chaque militant on choisi aléatoirement une position d'un électeur et on l'ajoute dans une liste d'objectifs et on l'a renvoie
