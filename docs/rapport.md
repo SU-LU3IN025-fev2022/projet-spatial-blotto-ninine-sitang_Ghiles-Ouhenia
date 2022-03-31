@@ -15,7 +15,9 @@ Stratégie fictitous_play:
 
 Stratégie stochastique_expert: cette fonction prend en paramètre un goalstate, une liste de stratégies, et une liste de probabilités associées à chaque stratégies. Au départ on choisit aléatoirement une probabilité p entre 0 et 1 puis, on parcours le tableau de probabilités jusqu'à trouver l'interval où il appartient et on retourne cette stratégie.
 ## Description des résultats
-    ## Fictitous vs Têtue:
+    ## Fictitous vs Têtu:
+
+e:
     Sur 50 campagnes, on remarque que fictitous remporte la totalité de la campagne.
     En effet on a d'une part Têtue qui emploie la même stratégie durant toute la campage. Tandis que Fictitous étant donné qu'il connait déjà la stratégie qui sera jouée par son adversaire et qu'il suit une stratégie de meilleures réponses, alors il va toujours battre son adversaire.
     
@@ -27,10 +29,10 @@ Stratégie stochastique_expert: cette fonction prend en paramètre un goalstate,
     Sur 50 campagnes, on remarque que fictitous a 18 victoires, et 32 null.
     La stratégie stochastique attribut des probabilités à chacune des stratégies qu'on lui associe ,et il met à jour cette probabilité selon le résultat du jour j-1. Fictitous quant à lui suit et enregistre les stratégies qu'utilise l'autre partie, et avec ces données, il pseudo-créé une table de probabitée avec les meilleurs réponse, et vue que stochastick posséde seulement 4 stratégies, fictitous vas rapidement créé une optimal de façon a ne pas perdre, ce qui explique le faite que fictitous n'a pas perdu.
     
-    ## Meilleure réponse vs Têtue: 
+    ## Têtue vs Meilleure réponse : ![tétue_vs_meilleureReponse](https://user-images.githubusercontent.com/100412562/161155900-570d52d2-032a-45f0-8aa7-30cabeab4e3e.png) 
     Sur 50 campagnes, la totalité a été remportée par la stratégie meilleure réponse. 
     Le jour 0, les deux deux parties choisissent aléatoirement leur stratégie, donc ils possédes tous les deux 50% de chance de gagner. Ce n'est qu'à partir du deuxième jour, que la stratégie meilleure réponse va battre son adversaire, car elle posséde déja la stratégie de l'autre camps, ce qui est en accord avec l'histogramme ci dessus.
     
-    ## Têtue vs Stochastique:
+    ## Têtue vs Stochastique:![tétue_vs_stochastique](https://user-images.githubusercontent.com/100412562/161155892-b40374e3-5fbe-495b-afdf-7e557f3fb5d9.png)
     Sur 50 campagnes, on observe que Têtue a 45 parties perdues, et 5 nulles. 
     Têtue utilise la même stratégie tout au long de la campagne. Tandis que Stochastique possède 4 stratégies et change ses probabilités de manière à choisir la stratégie qui bat celle de Têtue.
