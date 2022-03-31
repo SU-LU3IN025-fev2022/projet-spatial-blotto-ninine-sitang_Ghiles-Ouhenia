@@ -3,12 +3,13 @@
 # Nicolas, 2021-03-05
 from __future__ import absolute_import, print_function, unicode_literals
 
-import random 
+import random
+from tracemalloc import start 
 import numpy as np
 import sys
 from itertools import chain
 
-
+import strat 
 import pygame
 
 from pySpriteWorld.gameclass import Game,check_init_game_done
@@ -101,100 +102,37 @@ def main():
     NB_JOURS=3 #nombre de jours que dure la campagne 
     score_A=0 
     score_B=0
-    def strat_alea(goalStates,nbPlayers):
-
-        o1 = goalStates
-        o2 = goalStates
-        
-        random.shuffle(o1)
-        objectifs1=[]
-        for i in range(0,nbPlayers,2):
-            objectifs1.append(o1[random.randint(0,len(goalStates)-1)])
-
-        return objectifs1
-    def strat_tetu(o1): 
-        return o1
-
-    def strat_perdant(goalStates,nbPlayers,score_elec,score_A,score_B):
-        nb_joueurs = nbPlayers // 2
-        o1=[]
-        
-        for c in range(len(score_elec)):
-            if score_A > score_B:
-                x,y = score_elec[c]
-            else :
-                y,x = score_elec[c]
-            if nb_joueurs > x:
-                
-                y=x+1
-                nb_joueurs -= y
-                for i in range(y):
-                    o1.append(goalStates[c])
-            else:
-                if x==y :
-                    if x>1:
-                        y=0
-                    else :
-                        y=x
-                        nb_joueurs -= y
-                        for i in range(y):
-                            o1.append(goalStates[c])
-                else :
-                    y=0
-        if nb_joueurs>0:
-            o1.append(goalStates[-1])
-            
-        return o1
-    def nb_pas_max(n):
-        return n
-
-    def fictitious__play(goalStates,nbPlayers,tab_proba,A=True):
-        #Si A = true ça veux dire qu'on applique fictitous sur lui sinon sur B
-        trat_moyenne = [(0,0)] * len(goalStates)
-        for i in range(0,nbPlayers,2):
-            p = random.randint(0,100)/100
-            cpt = 0
-            j=0
-            while j<len(tab_proba) :
-                cpt += tab_proba[j]
-                if cpt  < tab_proba[j] :
-                    break 
-                j+=1
-            if A :
-                trat_moyenne[j][1]+=1
-            else :
-                trat_moyenne[j][0]+=1
-        if A :
-            return strat_perdant(goalStates,nbPlayers,trat_moyenne,0,1)
-        else :
-            return strat_perdant(goalStates,nbPlayers,trat_moyenne,1,0)
-
     #-------------------------------
     # Attributaion aleatoire des fioles 
     #-------------------------------
-    pas_max = 5
+    pas_max = 100
     
-    iterations = nb_pas_max(pas_max)
+    iterations = strat.nb_pas_max(pas_max)
     proba_fictitous_A = [0] * len(goalStates)
     proba_fictitous_B = [0] * len(goalStates)
+    liste_strat_A = []
+    liste_strat_B = []
     for j in range(NB_JOURS):
         #FAIRE L'INITIALISATION DES TABLEAU DE PROBA
-        if j == 0 :
-            objectifs1= strat_alea(goalStates,nbPlayers)
-            objectifs2= strat_alea(goalStates,nbPlayers)
+        """if j == 0 :
+            objectifs1= strat.alea(goalStates,nbPlayers)
+            objectifs2= strat.alea(goalStates,nbPlayers)
         if j>0:
             if score_A > score_B:
-                objectifs1 = strat_tetu(objectifs1) # A garde la meme trategie vue qu'il a gagnié
-                objectifs2 = strat_perdant(goalStates,nbPlayers,score_elec,score_A,score_B)
+                objectifs1 = strat.tetu(objectifs1) # A garde la meme trategie vue qu'il a gagnié
+                objectifs2 = strat.perdant(goalStates,nbPlayers,score_elec,score_A,score_B)
             if score_A < score_B:
-                objectifs1 = strat_perdant(goalStates,nbPlayers,score_elec,score_A,score_B) # B garde la meme trategie vue qu'il a gagnié
-                objectifs2 = strat_tetu(objectifs2)
+                objectifs1 = strat.perdant(goalStates,nbPlayers,score_elec,score_A,score_B) # B garde la meme trategie vue qu'il a gagnié
+                objectifs2 = strat.tetu(objectifs2)
             if score_A == score_B:
-                objectifs1= strat_alea(goalStates,nbPlayers)
-                objectifs2= strat_alea(goalStates,nbPlayers)
-        #objectifs1= strat_tetu(goalStates,nbPlayers,o1)
+                objectifs1= strat.alea(goalStates,nbPlayers)
+                objectifs2= strat.alea(goalStates,nbPlayers)
+        #objectifs1= strat_tetu(goalStates,nbPlayers,o1)"""
+        
         score_elec=[(0,0)] * len(goalStates)
         a=0
+        objectifs1= strat.fictitous_play(goalStates,nbPlayers,liste_strat_B)
+        objectifs2= strat.alea(goalStates,nbPlayers)
         
         for m in range(0,nbPlayers,2):
             #-----------------------
@@ -287,7 +225,7 @@ def main():
                     
                 
                 # on passe a l'iteration suivante du jeu
-                game.mainiteration()
+                #game.mainiteration()
             a+=1
         print("----------------------------",score_elec)
         for v in range(len(score_elec)):
@@ -298,7 +236,15 @@ def main():
                 score_B +=1
 
         print("score de A :", score_A)      
-        print("score de B :", score_B)  
+        print("score de B :", score_B)
+        strat_A=[0] * len(goalStates)
+        strat_B=[0] * len(goalStates)
+        for m in range(len(goalStates)):
+            strat_A[m],strat_B[m] =  score_elec[m]
+        
+        liste_strat_A.append(strat_A)
+        liste_strat_B.append(strat_B)
+        print(liste_strat_B)  
         
             
     
