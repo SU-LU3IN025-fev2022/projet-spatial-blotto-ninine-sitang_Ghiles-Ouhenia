@@ -131,7 +131,7 @@ def fictitous_play(goalStates,nbPlayers,liste_strat,jour):
     for i in range(len(strat)):
         for j in range(len(goalStates)):
             score_elec[j] = (strat[i][j],0)
-        meilleurs_strat_i = perdant(goalStates, nbPlayers, score_elec , score_A = 1, score_B = 0)
+        meilleurs_strat_i = meilleure_reponse(goalStates, nbPlayers, score_elec , score_A = 1, score_B = 0)
         if i==0 :
             meilleurs_strat = meilleurs_strat_i
         for j in range(len(goalStates)):
